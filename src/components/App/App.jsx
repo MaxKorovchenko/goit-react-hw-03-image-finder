@@ -68,11 +68,12 @@ export class App extends Component {
 
   render() {
     const { searchImages, loadMore, openModal, closeModal } = this;
-    const { images, isLoading, error, totalHits, showModal, url } = this.state;
+    const { searchQuery, images, isLoading, error, totalHits, showModal, url } =
+      this.state;
 
     return (
       <div>
-        <Searchbar onSubmit={searchImages} />
+        <Searchbar search={searchQuery} onSubmit={searchImages} />
 
         {error && <p>{error}</p>}
         <ImageGallery items={images} openModal={openModal} />

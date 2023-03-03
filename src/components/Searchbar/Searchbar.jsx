@@ -12,9 +12,10 @@ export class Searchbar extends Component {
 
   handleSubmit = e => {
     const { searchQuery } = this.state;
-    const { onSubmit } = this.props;
+    const { onSubmit, search } = this.props;
 
     e.preventDefault();
+    if (searchQuery === search) return;
     onSubmit(searchQuery);
     this.reset();
   };

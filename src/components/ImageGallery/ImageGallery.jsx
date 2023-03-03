@@ -2,7 +2,7 @@ import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
 import PropTypes from 'prop-types';
 
 export const ImageGallery = ({ items, openModal }) => {
-  console.log(items);
+  //console.log(items);
   return (
     <ul>
       {items.map(({ id, largeImageURL, ...otherProps }) => (
