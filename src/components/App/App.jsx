@@ -1,42 +1,91 @@
 import { Component } from 'react';
-import axios from 'axios';
 
 import { Searchbar } from 'components/Searchbar/Searchbar';
 import { GlobalStyle } from 'components/GlobalStyle';
 import { ImageGallery } from 'components/ImageGallery/ImageGallery';
+import { Loader } from 'components/Loader/Loader';
+import { Button } from 'components/Button/Button';
+
+import { fetchImages } from 'services/fetchImages';
+import { Modal } from 'components/Modal/Modal';
 
 export class App extends Component {
   state = {
     searchQuery: '',
     images: [],
+    isLoading: false,
+    error: null,
+    page: 1,
+    totalHits: null,
+    showModal: false,
+    url: '',
   };
 
   componentDidUpdate(prevProps, prevState) {
-    const { searchQuery } = this.state;
+    const { searchQuery, page } = this.state;
 
-    if (prevState.searchQuery !== searchQuery) {
-      const BASE_URL = 'https://pixabay.com/api/';
-      const API_KEY = '32970845-e4fc8afb31274d73d690834b7';
-      axios
-        .get(
-          `${BASE_URL}?q=cat&page=1&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`
+    if (prevState.searchQuery !== searchQuery || prevState.page !== page) {
+      this.setState({ isLoading: true });
+      fetchImages(searchQuery, page)
+        .then(data =>
+          this.setState(({ images }) => ({
+            images: [...images, ...data.hits],
+            totalHits: data.totalHits,
+          }))
         )
-        .then(({ data }) => this.setState({ images: data.hits }));
+        .catch(error => this.setState({ error: error.message }))
+        .finally(() => this.setState({ isLoading: false }));
     }
   }
 
   searchImages = searchQuery => {
-    this.setState({ searchQuery });
+    this.setState({
+      searchQuery,
+      images: [],
+      page: 1,
+    });
+  };
+
+  loadMore = () => {
+    this.setState(prevState => ({
+      page: prevState.page + 1,
+    }));
+  };
+
+  openModal = url => {
+    this.setState({
+      showModal: true,
+      url,
+    });
+  };
+
+  closeModal = () => {
+    this.setState({
+      showModal: false,
+      url: '',
+    });
   };
 
   render() {
-    const { searchImages } = this;
-    const { images } = this.state;
+    const { searchImages, loadMore, openModal, closeModal } = this;
+    const { images, isLoading, error, totalHits, showModal, url } = this.state;
 
     return (
       <div>
         <Searchbar onSubmit={searchImages} />
-        <ImageGallery items={images} />
+
+        {error && <p>{error}</p>}
+        <ImageGallery items={images} openModal={openModal} />
+        {isLoading && <Loader />}
+        {Boolean(images.length) && (
+          <Button onClick={loadMore} total={totalHits} items={images} />
+        )}
+
+        {showModal && (
+          <Modal close={closeModal}>
+            <img src={url} alt="" />
+          </Modal>
+        )}
 
         <GlobalStyle />
       </div>

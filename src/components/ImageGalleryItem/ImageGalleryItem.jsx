@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-export const ImageGalleryItem = ({ tags, webformatURL, largeImageURL }) => {
+export const ImageGalleryItem = ({ tags, webformatURL }) => {
   return <img src={webformatURL} alt={tags} />;
 };
 
