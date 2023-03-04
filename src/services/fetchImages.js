@@ -9,6 +9,5 @@ export const fetchImages = async (searchQuery, page = 1) => {
     `${BASE_URL}?key=${API_KEY}&q=${searchQuery}&page=${page}&${searchParams}`
   );
 
-  console.log(data);
   return data;
 };

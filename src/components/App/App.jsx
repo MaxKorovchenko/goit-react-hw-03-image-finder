@@ -1,7 +1,10 @@
 import { Component } from 'react';
+import { animateScroll } from 'react-scroll';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import { Searchbar } from 'components/Searchbar/Searchbar';
-import { GlobalStyle } from 'components/GlobalStyle';
+import { GlobalStyle } from 'services/GlobalStyle';
 import { ImageGallery } from 'components/ImageGallery/ImageGallery';
 import { Loader } from 'components/Loader/Loader';
 import { Button } from 'components/Button/Button';
@@ -35,8 +38,13 @@ export class App extends Component {
           images: [...images, ...data.hits],
           totalHits: data.totalHits,
         }));
+
+        if (!data.total) {
+          toast.info('No results were found for your search!');
+        }
       } catch (error) {
         this.setState({ error: error.message });
+        toast.error(`Whoops, something went wrong ${error.message}`);
       } finally {
         this.setState({ isLoading: false });
       }
@@ -55,6 +63,8 @@ export class App extends Component {
     this.setState(prevState => ({
       page: prevState.page + 1,
     }));
+
+    animateScroll.scrollToBottom();
   };
 
   openModal = url => {
@@ -73,14 +83,12 @@ export class App extends Component {
 
   render() {
     const { searchImages, loadMore, openModal, closeModal } = this;
-    const { searchQuery, images, isLoading, error, totalHits, showModal, url } =
+    const { searchQuery, images, isLoading, totalHits, showModal, url } =
       this.state;
 
     return (
       <div>
         <Searchbar search={searchQuery} onSubmit={searchImages} />
-
-        {error && <p>Whoops, something went wrong: {error}</p>}
 
         <ImageGallery items={images} openModal={openModal} />
 
@@ -97,6 +105,7 @@ export class App extends Component {
         )}
 
         <GlobalStyle />
+        <ToastContainer position="top-right" autoClose={3000} />
       </div>
     );
   }
