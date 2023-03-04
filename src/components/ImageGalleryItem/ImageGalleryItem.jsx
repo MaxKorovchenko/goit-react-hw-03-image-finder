@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types';
 
+import { Image } from './ImageGalleryItem.styled';
+
 export const ImageGalleryItem = ({ tags, webformatURL }) => {
-  return <img src={webformatURL} alt={tags} />;
+  return <Image src={webformatURL} alt={tags} />;
 };
 
 ImageGalleryItem.propTypes = {

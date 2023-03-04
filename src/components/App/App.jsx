@@ -5,36 +5,39 @@ import { GlobalStyle } from 'components/GlobalStyle';
 import { ImageGallery } from 'components/ImageGallery/ImageGallery';
 import { Loader } from 'components/Loader/Loader';
 import { Button } from 'components/Button/Button';
+import { Modal } from 'components/Modal/Modal';
 
 import { fetchImages } from 'services/fetchImages';
-import { Modal } from 'components/Modal/Modal';
 
 export class App extends Component {
   state = {
     searchQuery: '',
     images: [],
     isLoading: false,
-    error: null,
+    error: '',
     page: 1,
     totalHits: null,
     showModal: false,
     url: '',
   };
 
-  componentDidUpdate(prevProps, prevState) {
+  async componentDidUpdate(prevProps, prevState) {
     const { searchQuery, page } = this.state;
 
     if (prevState.searchQuery !== searchQuery || prevState.page !== page) {
       this.setState({ isLoading: true });
-      fetchImages(searchQuery, page)
-        .then(data =>
-          this.setState(({ images }) => ({
-            images: [...images, ...data.hits],
-            totalHits: data.totalHits,
-          }))
-        )
-        .catch(error => this.setState({ error: error.message }))
-        .finally(() => this.setState({ isLoading: false }));
+
+      try {
+        const data = await fetchImages(searchQuery, page);
+        this.setState(({ images }) => ({
+          images: [...images, ...data.hits],
+          totalHits: data.totalHits,
+        }));
+      } catch (error) {
+        this.setState({ error: error.message });
+      } finally {
+        this.setState({ isLoading: false });
+      }
     }
   }
 
@@ -75,9 +78,12 @@ export class App extends Component {
       <div>
         <Searchbar search={searchQuery} onSubmit={searchImages} />
 
-        {error && <p>{error}</p>}
+        {error && <p>Whoops, something went wrong: {error}</p>}
+
         <ImageGallery items={images} openModal={openModal} />
+
         {isLoading && <Loader />}
+
         {Boolean(images.length) && (
           <Button onClick={loadMore} total={totalHits} items={images} />
         )}

@@ -1,5 +1,8 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
+import { FcSearch } from 'react-icons/fc';
+
+import { Button, Form, Input } from './Searchbar.styled';
 
 export class Searchbar extends Component {
   state = {
@@ -16,6 +19,7 @@ export class Searchbar extends Component {
 
     e.preventDefault();
     if (searchQuery === search) return;
+
     onSubmit(searchQuery);
     this.reset();
   };
@@ -29,27 +33,29 @@ export class Searchbar extends Component {
     const { handleChange, handleSubmit } = this;
 
     return (
-      <header>
-        <form onSubmit={handleSubmit}>
-          <button type="submit">
-            <span>Search</span>
-          </button>
+      <>
+        <Form onSubmit={handleSubmit}>
+          <Button type="submit">
+            <FcSearch />
+          </Button>
 
-          <input
+          <Input
             onChange={handleChange}
             value={searchQuery}
             type="text"
             autoComplete="off"
             autoFocus
             placeholder="Search images and photos"
+            aria-label="search"
             required
           />
-        </form>
-      </header>
+        </Form>
+      </>
     );
   }
 }
 
 Searchbar.propTypes = {
   onSubmit: PropTypes.func.isRequired,
+  search: PropTypes.string.isRequired,
 };

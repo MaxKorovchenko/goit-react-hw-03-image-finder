@@ -3,7 +3,8 @@ import 'modern-normalize';
 
 export const GlobalStyle = createGlobalStyle`
  body {
-  margin: 20px;
+  margin: 0;
+  background-color: rgb(148, 156, 164);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;

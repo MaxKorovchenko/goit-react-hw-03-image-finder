@@ -1,16 +1,18 @@
-import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
 import PropTypes from 'prop-types';
 
+import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
+
+import { Gallery, Item } from './ImageGallery.styled';
+
 export const ImageGallery = ({ items, openModal }) => {
-  //console.log(items);
   return (
-    <ul>
+    <Gallery>
       {items.map(({ id, largeImageURL, ...otherProps }) => (
-        <li key={id} onClick={() => openModal(largeImageURL)}>
+        <Item key={id} onClick={() => openModal(largeImageURL)}>
           <ImageGalleryItem {...otherProps} />
-        </li>
+        </Item>
       ))}
-    </ul>
+    </Gallery>
   );
 };
 
@@ -22,6 +24,8 @@ ImageGallery.propTypes = {
   items: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,
+      largeImageURL: PropTypes.string.isRequired,
     })
   ).isRequired,
+  openModal: PropTypes.func.isRequired,
 };
