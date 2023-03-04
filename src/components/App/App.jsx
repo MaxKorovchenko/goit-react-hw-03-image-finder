@@ -9,6 +9,8 @@ import { Modal } from 'components/Modal/Modal';
 
 import { fetchImages } from 'services/fetchImages';
 
+import { Image } from './App.styled';
+
 export class App extends Component {
   state = {
     searchQuery: '',
@@ -90,7 +92,7 @@ export class App extends Component {
 
         {showModal && (
           <Modal close={closeModal}>
-            <img src={url} alt="" />
+            <Image src={url} alt="photo" />
           </Modal>
         )}
 
