@@ -35,7 +35,7 @@ export class Searchbar extends Component {
     return (
       <>
         <Form onSubmit={handleSubmit}>
-          <Button type="submit">
+          <Button type="submit" aria-label="search">
             <FcSearch />
           </Button>
 
